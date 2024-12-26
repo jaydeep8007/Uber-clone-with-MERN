@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel")
 const userService = require("../services/user.service")
 const { validationResult } = require("express-validator")
+const blacklistTokenModel = require("../models/blacklistToken.model")    
 
 module.exports.registerUser = async (req, res, next) => {
     const errors = validationResult(req)
@@ -8,16 +9,16 @@ module.exports.registerUser = async (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
-// console.log(req.body)
+    // console.log(req.body)
     const { fullname, email, password } = req.body
 
     const hashedPassword = await userModel.hashPassword(password)
     // console.log(hashedPassword)
-    
+
     const user = await userService.createUser({
 
         firstname: fullname.firstname,
-        lastname : fullname.lastname,
+        lastname: fullname.lastname,
         email,
         password: hashedPassword
 
@@ -36,33 +37,34 @@ module.exports.loginUser = async (req, res, next) => {
 
     const { email, password } = req.body
 
-// why +password is used here because we have set select:false in usermodel.js
-    const user = await userModel.findOne({email}).select("+password")
+    // why +password is used here because we have set select:false in usermodel.js
+    const user = await userModel.findOne({ email }).select("+password")
 
-    if(!user){
-        return res.status(401).json({message:"Invalid email or password"})
+    if (!user) {
+        return res.status(401).json({ message: "Invalid email or password" })
     }
     const isMatch = user.comparePassword(password)
 
-    if(!isMatch){
-       return res.status(401).json({message:"Invalid email or password"})
+    if (!isMatch) {
+        return res.status(401).json({ message: "Invalid email or password" })
     }
 
     const token = user.generateAuthToken()
-    res.status(200).json({token , user})
 
-    // const user = await userService.findUserByEmail(email)
+    res.cookie("token", token)
 
-    // if (!user) {
-    //     return res.status(404).json({ message: "User not found" })
-    // }
+    res.status(200).json({ token, user })
 
-    // const isMatch = await userModel.comparePasswords(password, user.password)
+}
+module.exports.getUserProfile = async (req, res, next) => {
+    res.status(200).json(req.user)
 
-    // if (!isMatch) {
-    //     return res.status(400).json({ message: "Invalid credentials" })
-    // }
+}
+module.exports.logoutUser = async (req, res, next) => {
+    res.clearCookie("token")
 
-    // const token = user.generateAuthToken()
-    // res.status(200).json({ user, token })
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
+    await blacklistTokenModel.create({token})
+    res.status(200).json({ message: "Logged out" })
+
 }
