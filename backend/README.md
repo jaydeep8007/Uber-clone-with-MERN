@@ -25,6 +25,7 @@ Example:
   "email": "john.doe@example.com",
   "password": "password123"
 }
+```
 
 # User Login Endpoint Documentation
 
