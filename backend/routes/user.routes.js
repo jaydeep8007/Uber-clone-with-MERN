@@ -30,3 +30,4 @@ router.get("/logout",authMiddleware.authUser, userController.logoutUser)
 
 
 module.exports = router 
+//aane app.js ma require kari ne use karvana 

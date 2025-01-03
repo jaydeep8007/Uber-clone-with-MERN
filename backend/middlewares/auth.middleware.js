@@ -18,6 +18,7 @@ if(isBlacklisted){
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await userModel.findById(decoded._id)
+        //set user to req.user so that we can access it in the next middleware .ajjj as a response chayu jase aapdi profile ma 
         req.user = user
         return next()
 
