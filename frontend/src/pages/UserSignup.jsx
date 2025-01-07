@@ -1,28 +1,63 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserDatacontext } from "../context/UserContext";
+import { useContext } from "react";
 
 const UserSignup = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setlastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [userData, setUserData] = useState({})
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(UserDatacontext); // Access context
+
+  const submitHandler = async (e) => {
     e.preventDefault();
+
     setFirstName("");
-    setlastName("");
-    setEmail("")
-    setPassword("")
-    setUserData({ fullName:{firstName , lastName}, email, password });
-    console.log(userData)
-    // Add form submission logic here
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    const newUser = {
+      fullname: {
+        firstname: firstName,
+        lastname: lastName,
+      },
+      email,
+      password,
+    };
+    // console.log("created user", newUser);
+
+    try {
+      // Make the API call
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        newUser
+      );
+
+      // Handle successful response
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user); // Update user state
+        navigate("/home"); // Navigate to home page
+      } else {
+        console.warn("Unexpected status code:", response.status);
+      }
+    } catch (error) {
+      // Handle errors here
+      console.error(
+        "Error during registration:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
-      <img
+        <img
           className="w-16 mb-5"
           src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
           alt=""
@@ -31,16 +66,16 @@ const UserSignup = () => {
           <h3 className="text-base font-medium mb-2">What's your name?</h3>
           <div className="flex gap-4 mb-6">
             <input
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               required
               className="bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-base placeholder:text-sm"
               type="text"
               placeholder="First name"
             />
             <input
-               value={lastName}
-               onChange={(e) => setlastName(e.target.value)}
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               required
               className="bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-base placeholder:text-sm"
               type="text"
@@ -49,8 +84,8 @@ const UserSignup = () => {
           </div>
           <h3 className="text-base font-medium mb-2">What's your Email</h3>
           <input
-             value={email}
-             onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
             className="bg-[#eeeeee] mb-6 rounded px-4 py-2 border w-full text-base placeholder:text-sm"
             type="email"
@@ -58,8 +93,8 @@ const UserSignup = () => {
           />
           <h3 className="text-base font-medium mb-2">Enter Password</h3>
           <input
-             value={password}
-             onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
             className="bg-[#eeeeee] mb-6 rounded px-4 py-2 border w-full text-base placeholder:text-sm"
             type="password"
@@ -67,6 +102,7 @@ const UserSignup = () => {
           />
           <button
             type="submit"
+            disabled={!(firstName && email && password)}
             className="bg-[#111] text-white font-semibold mb-3 rounded px-4 py-2 w-full text-lg"
           >
             Create Account
@@ -80,9 +116,13 @@ const UserSignup = () => {
         </p>
       </div>
       <div>
-       <p className="leading-4 text-gray-700 text-[10px]">
-       <p className='text-[10px] leading-tight'>This site is protected by reCAPTCHA and the <span className='underline'>Goog Policy</span> and <span className='underline'> Terms of Service apply</span>.</p>
-       </p>
+        <p className="leading-4 text-gray-700 text-[10px]">
+          <p className="text-[10px] leading-tight">
+            This site is protected by reCAPTCHA and the{" "}
+            <span className="underline">Goog Policy</span> and{" "}
+            <span className="underline"> Terms of Service apply</span>.
+          </p>
+        </p>
       </div>
     </div>
   );
