@@ -1,20 +1,45 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import { Link } from 'react-router-dom';
+
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 
 const CaptainnLogin = () => {
 
   const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [captainData, setCaptainData] = useState({});
+   
+      const { captain, setCaptain } = useContext(CaptainDataContext);
+      const navigate = useNavigate();
   
-    const submitHandler = (e) => {
+    const submitHandler =async (e) => {
       e.preventDefault();
-      setEmail("");
-      setPassword("");
-      captainData({ email, password });
+
+      // setEmail("");
+      // setPassword("");
+      const captain = { 
+        email,
+         password }
+
+         
+    // Make the API call
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/captains/login`,
+      captain
+    );
+    // Handle successful response
+    if (response.status === 200) {
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem("token", data.token); // Save token to local storage
+      navigate("/captain-home");
+
+      // Add your form submission logic here
+    }
   
-      console.log(captainData);
+      console.log(captain);
     };
   return (
     <div className="p-7 h-screen flex flex-col justify-between ">

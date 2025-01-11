@@ -29,6 +29,7 @@ const UserLogin = () => {
     if (response.status === 200) {
       const data = response.data;
       setUser(data.user); // Update user state
+      localStorage.setItem("token" , data.token); // Save token to local storage
       navigate("/home"); // Navigate to home page
     }
   }

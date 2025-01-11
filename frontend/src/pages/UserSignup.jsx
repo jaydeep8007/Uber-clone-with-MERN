@@ -41,6 +41,7 @@ const UserSignup = () => {
       if (response.status === 201) {
         const data = response.data;
         setUser(data.user); // Update user state
+        localStorage.setItem("token" , data.token); // Save token to local storage
         navigate("/home"); // Navigate to home page
       } else {
         console.warn("Unexpected status code:", response.status);
