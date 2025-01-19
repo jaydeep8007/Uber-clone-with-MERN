@@ -41,14 +41,14 @@ const CaptainSignup = () => {
 
     // Clear the input fields
 
-    // setFirstName("");
-    // setLastName("");
-    // setEmail("");
-    // setPassword("");
-    // setVehicleType("");
-    // setVehiclePlate("");
-    // setVehicleColor("");
-    // setVehicleCapacity("");
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    setVehicleType("");
+    setVehiclePlate("");
+    setVehicleColor("");
+    setVehicleCapacity("");
 
     console.log(captainData);
 
@@ -169,7 +169,7 @@ const CaptainSignup = () => {
         </form>
         <p className="text-center text-base">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600">
+          <Link to="/captain-login" className="text-blue-600">
             Login here
           </Link>
         </p>
