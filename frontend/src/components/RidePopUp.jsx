@@ -1,30 +1,34 @@
 import React from "react";
 
-const WaitingForDriver = (props) => {
+const RidePopUp = (props) => {
   return (
     <div>
-      <div className="mb-12 relative">
+      <div className="relative px-3">
         <div className=" absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <img
             onClick={() => {
-              props.setWaitingForDriver(false);
+              props.setRidePopUpPanel(false);
             }}
-            className="cursor-pointer"
+            className="cursor-pointer "
             src="/arrow-down-wide-fill.png"
             alt="Close"
           />
         </div>
-        <div className="flex items-center justify-between p-4">
-          <img
-            className="h-12"
-            src="https://swyft.pl/wp-content/uploads/2023/05/how-many-people-can-a-uberx-take.jpg"
-            alt=""
-          />
-          <div className="text-right">
-            <h2 className="text-lg font-medium">Popu</h2>
-            <h4 className="text-xl font-semibold -mt-1 mb-1">MP04 AB 1234</h4>
-            <p className="text-sm text-gray-600">Maruti Suzuki Alto</p>
+        <div className="flex justify-between items-center mt-8">
+          <h3 className="text-2xl font-semibold mt-2 mb-1  p-2">
+            New Ride Awailable!!
+          </h3>
+        </div>
+        <div className="flex items-center justify-between p-4 bg-yellow-300 rounded-lg  mt-1 ">
+          <div className="flex items-center justify-between gap-3">
+            <img
+              className="h-12 w-12 rounded-full object-cover "
+              src="https://plus.unsplash.com/premium_photo-1669879825881-6d4e4bde67d5?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tJTIwcGVvcGxlfGVufDB8fDB8fHww"
+              alt="Profile"
+            />
+            <h2 className="text-lg font-medium">Harsh Patel</h2>
           </div>
+          <h5 className="text-lg font-semibold">2.2 KM</h5>
         </div>
 
         <div className="gap-2 flex flex-col justify-center items-center">
@@ -58,10 +62,29 @@ const WaitingForDriver = (props) => {
               </div>
             </div>
           </div>
+          <div className=" w-full flex flex-row gap-3 my-3">
+            <button
+              onClick={() => {
+             props.setConfirmRidePopUpPanel(true);
+          
+              }}
+              className=" text-lg   w-full bg-green-600 text-white font-semibold p-2 rounded"
+            >
+             Accept
+            </button>
+            <button
+              onClick={() => {
+                props.setRidePopUpPanel(false);
+              }}
+              className="text-lg   w-full bg-red-500 text-white font-semibold p-2 rounded"
+            >
+              Ignore
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default WaitingForDriver;
+export default RidePopUp;
