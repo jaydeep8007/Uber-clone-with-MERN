@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
 
 //creating custom methods for the userSchema ....why this aproach ...Encapsulation: The method is directly associated with the userSchema. It's reusable and scoped to user instances.
 userSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET ,{expiresIn:"24hr"})
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET ,{expiresIn:"48hr"})
     return token
 }
 
