@@ -1,29 +1,83 @@
+
+// import React from "react";
+
+// const LocationSearchPanel = ({
+//   suggestions,
+//   setVehiclePanelOpen,
+//   setPanelopen,
+//   setPickup,
+//   setDestination,
+//   activeField,
+// }) => {
+//   const handleSuggestionClick = (suggestion) => {
+//     if (activeField === "pickup") {
+//       setPickup(suggestion);
+//     } else if (activeField === "destination") {
+//       setDestination(suggestion);
+//     }
+//     // setVehiclePanel(true);
+//     // setPanelopen(false);
+//   };
+
+//   return (
+//     <div>
+//       {/* Display fetched suggestions */}
+//       {suggestions.map((elem, idx) => (
+//         <div
+//           key={idx}
+//           onClick={() => handleSuggestionClick(elem)}
+//           className="bg-[#eee] h-8 flex items-center justify-center cursor-pointer"
+//         >
+//           <h4 className="font-medium">{elem}</h4>
+      
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default LocationSearchPanel;
+
+
 import React from "react";
 
-const LocationSearchPanel = (props) => {
-  const locations = [
-    "12A, Silicon Valley Lane, near CodeHub Cafe, Bengaluru",
-    "45C, Innovators Street, near Techno Park, Hyderabad",
-    "78D, DevHub Alley, near Hackers Cafe, Pune",
-    "21E, Programmers Lane, near Algorithm Plaza, Chennai",
-    "99F, Debuggers Road, near Compile Cafe, Mumbai",
-  ];
+const LocationSearchPanel = ({
+  suggestions,
+  setPickup,
+  setDestination,
+  activeField,
+}) => {
+  const handleSuggestionClick = (suggestion) => {
+    if (activeField === "pickup") {
+      setPickup(suggestion.description);
+    } else if (activeField === "destination") {
+      setDestination(suggestion.description);
+    }
+  };
+
   return (
-    <>
-      <div className="p-6 flex flex-col gap-3">
-        {locations.map((v, i) => {
-          return (
-            <div key={i} onClick={()=>{
-               props.setVehiclePanelOpen(true)
-               props.setPanelOpen(false)
-            }} className="active:border-2 active:border-black rounded-xl p-3 flex flex-row gap-4 justify-center items-center border-2  border-gray-400 pb-2">
-              <img className="bg-cover h-full" src="/map-pin-line.png" alt="" />
-              <p className="font-semibold leading-none">{v}</p>
+    <div className="bg-white  shadow-lg rounded-xl px-4 w-full max-w-md mx-auto">
+      <h3 className="text-lg font-semibold text-gray-700 mb-2">Select Location</h3>
+
+      {/* Ensure suggestions exist and are an array */}
+      {Array.isArray(suggestions) && suggestions.length > 0 ? (
+        <div  className="space-y-2">
+          {suggestions.map((elem, idx) => (
+            <div
+              key={elem.place_id || idx}
+              onClick={() => handleSuggestionClick(elem)}
+              className="p-3 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-all duration-200 flex items-center gap-3"
+            >
+              <span className="text-gray-700 text-sm font-medium">
+                {elem.description}
+              </span>
             </div>
-          );
-        })}
-      </div>
-    </>
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500 text-center mt-2">No suggestions found.</p>
+      )}
+    </div>
   );
 };
 

@@ -67,7 +67,7 @@ module.exports.getDistanceTime = async (origin, destination) => {
   }
 };
 
-module.exports.getAutocompleteSuggetions = async (input) => {
+module.exports.getAutocompleteSuggestions = async (input) => {
   if (!input) {
     throw new Error('Input is required')}
   const apiKey = process.env.GOOGLE_MAPS_API

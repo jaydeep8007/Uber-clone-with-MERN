@@ -3,19 +3,19 @@ import React from 'react'
 const LookingForDriver = (props) => {
   return (
     <div>
-      <div className="mb-12 relative">
+      <div className="relative">
         <div className=" absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <img
             onClick={() => {
                 props.setVehicleFound(false)
             }}
-            className="cursor-pointer"
-            src="/arrow-down-wide-fill.png"
+            className="cursor-pointer h-10"
+            src="https://i.gifer.com/origin/8b/8b4d5872105584fe9e2d445bea526eb5_w200.gif"
             alt="Close"
           />
         </div>
         <div className="flex justify-between items-center mt-8">
-          <h3 className="text-2xl font-semibold mt-2 mb-5 ml-5 p-2">
+          <h3 className="text-2xl font-semibold mt-4 mb-5 ml-5 p-2">
             Looking For Driver
           </h3>
         </div>
@@ -32,7 +32,7 @@ const LookingForDriver = (props) => {
               <div className="">
                 <h3 className="text-lg font-medium">562/11-A</h3>
                 <p className="text-sm  text-gray-600">
-                  Kankariya Talab, Bhopal
+                  {props.pickup}
                 </p>
               </div>
             </div>
@@ -42,7 +42,7 @@ const LookingForDriver = (props) => {
               <div className="">
                 <h3 className="text-lg font-medium">Third wave , Cofee</h3>
                 <p className="text-sm  text-gray-600">
-                17th crossroad ,near black bull market , Bhopal
+                {props.destination}
                 </p>
               </div>
             </div>
@@ -50,7 +50,7 @@ const LookingForDriver = (props) => {
               <img className="h-fit" src="currency-fill.png"  alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">$11.99</h3>
+                <h3 className="text-lg font-medium">₹{props.fare[props.vehicleType]}</h3>
                 <p className="text-sm  text-gray-600">
                   cash cash
                 </p>

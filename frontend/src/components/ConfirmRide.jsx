@@ -32,7 +32,7 @@ const ConfirmRide = (props) => {
               <div className="">
                 <h3 className="text-lg font-medium">562/11-A</h3>
                 <p className="text-sm mt-1 text-gray-600">
-                  Kankariya Talab, Bhopal
+                  {props.pickup}
                 </p>
               </div>
             </div>
@@ -42,7 +42,7 @@ const ConfirmRide = (props) => {
               <div className="">
                 <h3 className="text-lg font-medium">Third wave , Cofee</h3>
                 <p className="text-sm mt-1 text-gray-600">
-                17th crossroad ,near black bull market , Bhopal
+                {props.destination}
                 </p>
               </div>
             </div>
@@ -50,9 +50,9 @@ const ConfirmRide = (props) => {
               <img className="h-fit" src="currency-fill.png"  alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">$11.99</h3>
+                <h3 className="text-lg font-medium">₹{props.fare[props.vehicleType]}</h3>
                 <p className="text-sm mt-1 text-gray-600">
-                  cash cash
+                  cash Cash
                 </p>
               </div>
             </div>
@@ -60,6 +60,8 @@ const ConfirmRide = (props) => {
           <button  onClick={()=>{
             props.setVehicleFound(true)
             props.setConfirmRidePanel(false)
+            props.createRide()
+            
           }} className=" scale-95 my-3 w-full bg-green-600 text-white font-semibold p-2 rounded">
             Confirm
           </button>

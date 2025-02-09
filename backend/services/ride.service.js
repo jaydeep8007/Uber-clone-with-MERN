@@ -9,13 +9,6 @@ async function getFare(pickup, destination) {
 
 
 
-  
-  
-  
-  
-
-  
-
   const distanceTime = await mapService.getDistanceTime(pickup, destination)
   const baseFare = {
     auto: 30,
@@ -40,20 +33,21 @@ async function getFare(pickup, destination) {
   // Fare calculation logic
   const fare = {
     auto:
-      baseFare.auto +
+    Math.round ( baseFare.auto +
       ((distanceTime.distance/1000) * perKmRate.auto) +
-      ((distanceTime.duration/60) * perMinuteRate.auto),
+      ((distanceTime.duration/60) * perMinuteRate.auto)),
     car:
-      baseFare.car +
+    Math.round( baseFare.car +
       ((distanceTime.distance/1000) * perKmRate.car) +
-      ((distanceTime.duration/60) * perMinuteRate.car),
+      ((distanceTime.duration/60) * perMinuteRate.car)),
     motorcycle:
-      baseFare.motorcycle +
+    Math.round ( baseFare.motorcycle +
       ((distanceTime.distance/1000) * perKmRate.motorcycle) +
-      ((distanceTime.duration/60) * perMinuteRate.motorcycle),
+      ((distanceTime.duration/60) * perMinuteRate.motorcycle)),
   };
   return fare;
 }
+module.exports.getFare = getFare
 
 
 function getOtp(num) {

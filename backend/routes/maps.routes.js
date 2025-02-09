@@ -35,7 +35,7 @@ router.get("/get-distance-time",
   authMiddleware.authUser, mapController.getDistanceTime
 )
 
-router.get("/get-suggetions",
+router.get("/get-suggestions",
   [
     // Validate that 'input' is provided and is not empty
     query('input')
@@ -44,7 +44,7 @@ router.get("/get-suggetions",
       .isString()
       .withMessage('Input must be a string'),
   ],
-  authMiddleware.authUser, mapController.getAutocompleteSuggetions
+  authMiddleware.authUser, mapController.getAutocompleteSuggestions
 )
 
 

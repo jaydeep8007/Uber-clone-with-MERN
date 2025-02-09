@@ -2,17 +2,17 @@ const captainModel = require("../models/captainModel.js")
 
 
 //aa function ne controller ma require karvani
-module.exports.createCaptain = async ({ 
-    firstname, lastname, email, password, color , vehicleType , plate , capacity , 
- }) => {
-    if (!firstname || !email || !password || !color || !vehicleType || !plate || !capacity) {
-        throw new Error("all fields are required")
-    }
 
+module.exports.createCaptain = async ({
+    firstname, lastname, email, password, color, plate, capacity, vehicleType
+}) => {
+    if (!firstname || !email || !password || !color || !plate || !capacity || !vehicleType) {
+        throw new Error('All fields are required');
+    }
     const captain = captainModel.create({
         fullname: {
             firstname,
-            lastname,
+            lastname
         },
         email,
         password,
@@ -23,6 +23,6 @@ module.exports.createCaptain = async ({
             vehicleType
         }
     })
-    return captain
 
+    return captain;
 }

@@ -40,7 +40,7 @@ module.exports.getDistanceTime = async (req, res, next) => {
         res.status(404).json({ message: error.message });
     }
 }
-module.exports.getAutocompleteSuggetions = async (req, res, next) => {
+module.exports.getAutocompleteSuggestions = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -53,7 +53,7 @@ module.exports.getAutocompleteSuggetions = async (req, res, next) => {
         return res.status(400).json({ message: 'Input is required' });
         }
     
-        const suggetions = await mapService.getAutocompleteSuggetions(input);
+        const suggetions = await mapService.getAutocompleteSuggestions(input);
         res.status(200).json(suggetions);
     } catch (error) {
         res.status(404).json({ message: error.message });

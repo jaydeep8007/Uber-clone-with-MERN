@@ -11,62 +11,51 @@ const CaptainSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [vehicleType, setVehicleType] = useState("");
-  const [vehicleColor, setVehicleColor] = useState("");
-  const [vehiclePlate, setVehiclePlate] = useState("");
-  const [vehicleCapacity, setVehicleCapacity] = useState("");
-  const [userData, setUserData] = useState({});
+  const [ vehicleColor, setVehicleColor ] = useState('')
+  const [ vehiclePlate, setVehiclePlate ] = useState('')
+  const [ vehicleCapacity, setVehicleCapacity ] = useState('')
+  const [ vehicleType, setVehicleType ] = useState('')
+
 
   const { captain, setCaptain } = useContext(CaptainDataContext);
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
-    e.preventDefault();
-
-    // Capture user and vehicle data
+    e.preventDefault()
     const captainData = {
       fullname: {
         firstname: firstName,
-        lastname: lastName,
+        lastname: lastName
       },
-      email,
-      password,
+      email: email,
+      password: password,
       vehicle: {
-        vehicleType: vehicleType,
         color: vehicleColor,
         plate: vehiclePlate,
         capacity: vehicleCapacity,
-      },
-    };
-
-    // Clear the input fields
-
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
-    setVehicleType("");
-    setVehiclePlate("");
-    setVehicleColor("");
-    setVehicleCapacity("");
-
-    console.log(captainData);
-
-    // Make the API call
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/captains/register`,
-      captainData
-    );
-    // Handle successful response
-    if (response.status === 201) {
-      const data = response.data;
-      setCaptain(data.captain);
-      localStorage.setItem("token", data.token); // Save token to local storage
-      navigate("/captain-home");
-
-      // Add your form submission logic here
+        vehicleType: vehicleType
+      }
     }
-  };
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
+
+    if (response.status === 201) {
+      const data = response.data
+      setCaptain(data.captain)
+      localStorage.setItem('token', data.token)
+      navigate('/captain-home')
+    }
+
+    // setEmail('')
+    // setFirstName('')
+    // setLastName('')
+    // setPassword('')
+    // setVehicleColor('')
+    // setVehiclePlate('')
+    // setVehicleCapacity('')
+    // setVehicleType('')
+
+  }
 
   return (
     <div className="p-4 h-screen flex flex-col justify-between">
