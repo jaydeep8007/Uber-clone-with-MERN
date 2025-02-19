@@ -30,9 +30,9 @@ const LookingForDriver = (props) => {
               <img className="h-fit" src="map-pin-2-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">562/11-A</h3>
+                <h3 className="text-lg font-medium">Pickup</h3>
                 <p className="text-sm  text-gray-600">
-                  {props.pickup}
+                {props.pickup}
                 </p>
               </div>
             </div>
@@ -40,7 +40,7 @@ const LookingForDriver = (props) => {
               <img className="h-fit" src="square-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">Third wave , Cofee</h3>
+                <h3 className="text-lg font-medium"> Destination</h3>
                 <p className="text-sm  text-gray-600">
                 {props.destination}
                 </p>

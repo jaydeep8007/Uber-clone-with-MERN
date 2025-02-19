@@ -1,14 +1,16 @@
-import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import React, { useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
 import FinishRide from '../components/FinishRide';
+import LiveTracking from '../components/LiveTracking';
 
 const CaptainRiding = () => {
 
     const [finishRidePanel  , setFinishRidePanel] = useState(false)
 const finishRidePanelRef = useRef(null)
+const location = useLocation()
+const rideData = location.state?.ride
 
 useGSAP(()=>{
   if(finishRidePanel){
@@ -25,9 +27,9 @@ useGSAP(()=>{
     <div className="h-screen bg-gray-100 overflow-hidden">
       <div className="relative h-full">
         {/* Top Bar */}
-        <div className="fixed top-0 left-0 right-0 h-16 sm:h-20 p-4 flex items-center justify-between bg-white shadow-lg z-10">
+        <div className="fixed top-0 left-0 right-0 h-16 sm:h-20 p-4 flex items-center justify-between  shadow-lg z-10">
           <img
-            className=" max-h-8 sm:max-h-12"
+            className=" max-h-6 sm:max-h-8"
             src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
             alt="Uber Logo"
           />
@@ -41,11 +43,12 @@ useGSAP(()=>{
 
         {/* Main Content */}
         <div className="mt-16 sm:mt-20 h-[70%]">
-          <img
-            className="w-full h-full object-cover rounded-lg shadow-md"
-            src="/uber-map.png"
-            alt="Uber Map"
-          />
+         <LiveTracking/>
+          {/* <img 
+          className="w-full h-full  object-cover"
+          src="/uber-map.png"
+          alt="Uber background"
+        /> */}
         </div>
 
         {/* Bottom Section */}
@@ -66,7 +69,7 @@ useGSAP(()=>{
            <img src="/arrow-up-s-line.png" alt="" />
           </h5>
           <div ref={finishRidePanelRef} className="overflow-hidden translate-y-full  fixed w-full   z-10 bottom-0 left-0 right-0 bg-white">
-       <FinishRide setFinishRidePanel={setFinishRidePanel}  />
+       <FinishRide ride= {rideData} setFinishRidePanel={setFinishRidePanel}  />
       </div>
         </div>
       </div>

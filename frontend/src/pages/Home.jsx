@@ -10,6 +10,7 @@ import WaitingForDriver from "../components/WaitingForDriver";
 import { SocketContext } from "../context/SocketContext";
 import { UserDatacontext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -29,6 +30,7 @@ const Home = () => {
   const [activeField, setActiveField] = useState(null);
   const [vehicleType, setVehicleType] = useState(null);
   const [fare, setFare] = useState({});
+  const [ride, setRide] = useState(null);
 
   const navigate = useNavigate()
 
@@ -42,17 +44,19 @@ const Home = () => {
       }, [ user ])
   
       socket.on('ride-confirmed', ride => {
-  
+  // console.log("ride confirmed socket on")
           setVehicleFound(false)
           setWaitingForDriver(true)
           setRide(ride)
       })
   
       socket.on('ride-started', ride => {
-          console.log("ride")
+          console.log("ride started sockett on navigate to riding")
           setWaitingForDriver(false)
           navigate('/riding', { state: { ride } }) // Updated navigate to include ride data
       })
+
+    
   
 
   const handlePickupChange = async (e) => {
@@ -203,18 +207,19 @@ const Home = () => {
         />
       </div>
 
-      {/* Background Image */}
-      <div>
-        <img
+      {/* Background Live Map */}
+      <div  className="w-full h-screen  object-cover">
+        <LiveTracking/>
+        {/* <img
           className="w-full h-screen  object-cover"
           src="/uber-map.png"
           alt="Uber background"
-        />
+        /> */}
       </div>
 
 {/* Form Section */}
 <div className="h-screen flex flex-col justify-end absolute w-full top-0">
-  <div className="relative bg-white p-6 rounded-t-3xl shadow-xl">
+  <div className="relative bg-white p-6 rounded-t-xl shadow-xl">
     {/* Close Button */}
     {panelOpen && (
       <button
@@ -333,6 +338,7 @@ const Home = () => {
         className="overflow-hidden  fixed w-full  z-10 bottom-0 left-0 right-0 bg-white"
       >
         <WaitingForDriver
+        ride={ride}
           waitingForDriver={waitingForDriver}
           setWaitingForDriver={setWaitingForDriver}
           vehicleFound={vehicleFound}

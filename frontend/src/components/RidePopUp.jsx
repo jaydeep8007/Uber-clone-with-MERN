@@ -26,7 +26,7 @@ const RidePopUp = (props) => {
               src="https://plus.unsplash.com/premium_photo-1669879825881-6d4e4bde67d5?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tJTIwcGVvcGxlfGVufDB8fDB8fHww"
               alt="Profile"
             />
-            <h2 className="text-lg font-medium">Harsh Patel</h2>
+            <h2 className="text-lg font-medium">{props.ride?.user.fullname.firstname + " " +props.ride?.user.fullname.lastname }</h2>
           </div>
           <h5 className="text-lg font-semibold">2.2 KM</h5>
         </div>
@@ -37,9 +37,9 @@ const RidePopUp = (props) => {
               <img className="h-fit" src="map-pin-2-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">562/11-A</h3>
+                <h3 className="text-lg font-medium">Pickup</h3>
                 <p className="text-sm  text-gray-600">
-                  Kankariya Talab, Bhopal
+                {props.ride?.pickup}
                 </p>
               </div>
             </div>
@@ -47,9 +47,9 @@ const RidePopUp = (props) => {
               <img className="h-fit" src="square-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">Third wave , Cofee</h3>
+                <h3 className="text-lg font-medium">Destination</h3>
                 <p className="text-sm  text-gray-600">
-                  17th crossroad ,near black bull market , Bhopal
+                {props.ride?.destination}
                 </p>
               </div>
             </div>
@@ -57,7 +57,7 @@ const RidePopUp = (props) => {
               <img className="h-fit" src="currency-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">$11.99</h3>
+                <h3 className="text-lg font-medium">$ {props.ride?.fare}</h3>
                 <p className="text-sm  text-gray-600">cash cash</p>
               </div>
             </div>
@@ -66,6 +66,7 @@ const RidePopUp = (props) => {
             <button
               onClick={() => {
              props.setConfirmRidePopUpPanel(true);
+             props.confirmRide()
           
               }}
               className=" text-lg   w-full bg-green-600 text-white font-semibold p-2 rounded"

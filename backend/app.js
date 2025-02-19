@@ -18,7 +18,9 @@ const rideRoutes = require("./routes/ride.routes")
 app.use(cors())
 app.use(cookieParser())
 
-app.use(express.json())
+
+app.use(express.json()); // Enable JSON request parsing
+
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/users", userRoutes)

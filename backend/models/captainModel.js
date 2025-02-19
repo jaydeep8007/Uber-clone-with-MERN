@@ -67,13 +67,10 @@ const captainSchema = new mongoose.Schema({
         }
 
     },
+    //changing this bcs we need geoJSON formate only location with ltd and lng not worked
     location: {
-        lat: {
-            type: Number
-        },
-        lng: {
-            type: Number
-        }
+        type: { type: String, enum: ['Point'], required: true, default: 'Point' },
+        coordinates: { type: [Number], required: true }
     }
 })
 

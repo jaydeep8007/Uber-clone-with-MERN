@@ -1,11 +1,30 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import axios from "axios";
 
 const ConfirmRidePopUp = (props) => {
-const [otp, setOtp] = useState("")
+  const [ otp, setOtp ] = useState('')
+  const navigate = useNavigate()
 
-const submitHandler=(e)=>{
-e.preventDefault()
+  const submitHander = async (e) => {
+      e.preventDefault()
+
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+          params: {
+              rideId: props.ride._id,
+              otp: otp
+          },
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+      })
+
+      if (response.status === 200) {
+          props.setConfirmRidePopUpPanel(false)
+          props.setRidePopUpPanel(false)
+          navigate('/captain-riding', { state: { ride: props.ride } })
+      }
 }
 
   return (
@@ -33,7 +52,7 @@ e.preventDefault()
               src="https://media.licdn.com/dms/image/v2/D5603AQHhwgjSaHYZ2Q/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1666341853137?e=2147483647&v=beta&t=hocXcNj5WFXEQ3ltGCPjnblr8I-_qGPJL_TKf2N4X8g"
               alt="Profile"
             />
-            <h2 className="text-lg font-medium">Harsh Patel</h2>
+            <h2 className="text-lg font-medium">{props.ride?.user.fullname.firstname}</h2>
           </div>
           <h5 className="text-lg font-semibold">2.2 KM</h5>
         </div>
@@ -44,9 +63,9 @@ e.preventDefault()
               <img className="h-fit" src="map-pin-2-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">562/11-A</h3>
+                <h3 className="text-lg font-medium">{props.ride?.pickup}</h3>
                 <p className="text-sm  text-gray-600">
-                  Kankariya Talab, Bhopal
+                 
                 </p>
               </div>
             </div>
@@ -54,9 +73,9 @@ e.preventDefault()
               <img className="h-fit" src="square-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">Third wave , Cofee</h3>
+                <h3 className="text-lg font-medium">{props.ride?.destination}</h3>
                 <p className="text-sm  text-gray-600">
-                  17th crossroad ,near black bull market , Bhopal
+                  
                 </p>
               </div>
             </div>
@@ -64,45 +83,23 @@ e.preventDefault()
               <img className="h-fit" src="currency-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">$11.99</h3>
+                <h3 className="text-lg font-medium">₹{props.ride?.fare}</h3>
                 <p className="text-sm  text-gray-600">cash cash</p>
               </div>
             </div>
           </div>
           <div className="w-full flex flex-col gap-4 my-3">
-            <form onSubmit={()=>{
-              subitHandler(e)
-            }} className="w-full flex flex-col gap-4 my-3" action="">
-              <input
-              value={otp}
-              onChange={(e)=>setOtp(e.target.value)}
-                type="number"
-                inputMode="numeric"
-                className="bg-[#eee] text-lg border-2 border-gray-400 text-center w-full font-semibold p-2 rounded-lg"
-                placeholder="Enter OTP"
-                onInput={(e) => {
-                  if (e.target.value.length > 6) {
-                    e.target.value = e.target.value.slice(0, 6); // Restrict to 6 digits
-                  }
-                }}
-              />
+          <form onSubmit={submitHander}>
+                        <input value={otp} onChange={(e) => setOtp(e.target.value)} type="text" className='bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-3' placeholder='Enter OTP' />
 
-              <Link
-                to="/captain-riding"
-                className="text-lg w-full bg-green-600 text-white font-semibold p-2 rounded-lg inline-block text-center"
-              >
-                Confirm
-              </Link>
-              <button
-                onClick={() => {
-                  props.setConfirmRidePopUpPanel(false);
-                  props.setRidePopUpPanel(false);
-                }}
-                className="text-lg   w-full bg-red-500 text-white font-semibold p-2 rounded-lg"
-              >
-                Cancle
-              </button>
-            </form>
+                        <button className='w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg'>Confirm</button>
+                        <button onClick={() => {
+                            props.setConfirmRidePopupPanel(false)
+                            props.setRidePopupPanel(false)
+
+                        }} className='w-full mt-2 bg-red-600 text-lg text-white font-semibold p-3 rounded-lg'>Cancel</button>
+
+                    </form>
           </div>
         </div>
       </div>

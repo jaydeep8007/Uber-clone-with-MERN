@@ -1,8 +1,30 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 
 const FinishRide = (props) => {
+
+  const navigate = useNavigate()
+
+  async function endRide() {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
+
+          rideId: props.ride._id
+
+
+      }, {
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+      })
+
+      if (response.status === 200) {
+          navigate('/captain-home')
+      }
+
+  }
   return (
    <div>
          <div className="relative px-3">
@@ -28,7 +50,7 @@ const FinishRide = (props) => {
                  src="https://media.licdn.com/dms/image/v2/D5603AQHhwgjSaHYZ2Q/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1666341853137?e=2147483647&v=beta&t=hocXcNj5WFXEQ3ltGCPjnblr8I-_qGPJL_TKf2N4X8g"
                  alt="Profile"
                />
-               <h2 className="text-lg font-medium">Harsh Patel</h2>
+               <h2 className="text-lg font-medium">{props.ride?.user.fullname.firstname}</h2>
              </div>
              <h5 className="text-lg font-semibold">2.2 KM</h5>
            </div>
@@ -39,9 +61,9 @@ const FinishRide = (props) => {
                  <img className="h-fit" src="map-pin-2-fill.png" alt="" />
    
                  <div className="">
-                   <h3 className="text-lg font-medium">562/11-A</h3>
+                   <h3 className="text-lg font-medium">Pickup</h3>
                    <p className="text-sm  text-gray-600">
-                     Kankariya Talab, Bhopal
+                    {props.ride?.pickup}
                    </p>
                  </div>
                </div>
@@ -49,9 +71,9 @@ const FinishRide = (props) => {
                  <img className="h-fit" src="square-fill.png" alt="" />
    
                  <div className="">
-                   <h3 className="text-lg font-medium">Third wave , Cofee</h3>
+                   <h3 className="text-lg font-medium">Destination</h3>
                    <p className="text-sm  text-gray-600">
-                     17th crossroad ,near black bull market , Bhopal
+                   {props.ride?.destination}
                    </p>
                  </div>
                </div>
@@ -59,21 +81,18 @@ const FinishRide = (props) => {
                  <img className="h-fit" src="currency-fill.png" alt="" />
    
                  <div className="">
-                   <h3 className="text-lg font-medium">$11.99</h3>
+                   <h3 className="text-lg font-medium">${props.ride?.fare}</h3>
                    <p className="text-sm  text-gray-600">cash cash</p>
                  </div>
                </div>
              </div>
              <div className="w-full flex flex-col gap-4 my-3">
-             <Link
-             to={"/captain-home"}
-                onClick={() => {
-                 
-                }}
+             <button 
+             onClick={endRide}
                 className="text-lg flex justify-center items-center w-full bg-blue-500 text-white font-semibold p-2 rounded-lg"
               >
                Finish Ride
-              </Link>
+              </button>
              </div>
            </div>
          </div>

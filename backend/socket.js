@@ -29,20 +29,55 @@ function initializeSocket(server) {
         });
 
 
+        // socket.on('update-location-captain', async (data) => {
+        //     const { userId, location } = data;
+
+        //     if (!location || !location.ltd || !location.lng) {
+        //         return socket.emit('error', { message: 'Invalid location data' });
+        //     }
+
+        //     await captainModel.findByIdAndUpdate(userId, {
+        //         location: {
+        //             ltd: location.ltd,
+        //             lng: location.lng
+        //         }
+        //     });
+        // });
+
         socket.on('update-location-captain', async (data) => {
-            const { userId, location } = data;
-
-            if (!location || !location.ltd || !location.lng) {
-                return socket.emit('error', { message: 'Invalid location data' });
-            }
-
-            await captainModel.findByIdAndUpdate(userId, {
-                location: {
-                    ltd: location.ltd,
-                    lng: location.lng
+            try {
+                const { userId, location } = data;
+        
+                if (!location || typeof location.ltd !== 'number' || typeof location.lng !== 'number') {
+                    return socket.emit('error', { message: 'Invalid location data' });
                 }
-            });
+        
+                const updatedCaptain = await captainModel.findByIdAndUpdate(
+                    userId,
+                    {
+                        $set: {
+                            location: {
+                                type: "Point",
+                                coordinates: [location.lng, location.ltd] // Correct GeoJSON format
+                            }
+                        }
+                    },
+                    { new: true } // Return updated document
+                );
+        
+                if (!updatedCaptain) {
+                    return socket.emit('error', { message: 'Captain not found' });
+                }
+        
+                socket.emit('location-updated', { message: 'Location updated successfully', location: updatedCaptain.location });
+        
+            } catch (error) {
+                console.error('Error updating location:', error);
+                socket.emit('error', { message: 'Error updating location', error: error.message });
+            }
         });
+        
+        
 
         socket.on('disconnect', () => {
             console.log(`Client disconnected: ${socket.id}`);

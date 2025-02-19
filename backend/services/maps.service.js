@@ -1,6 +1,7 @@
-
-
 const axios = require("axios");
+const captainModel = require("../models/captainModel")
+
+
 
 /**
  * Function to get coordinates (latitude and longitude) of an address using Google Maps API.
@@ -18,7 +19,7 @@ module.exports.getAddressCoordinates = async (address) => {
     if (response.data.status === 'OK') {
       // Extract latitude and longitude from the first result
       const location = response.data.results[0].geometry.location;
-      return { lat: location.lat, lng: location.lng };
+      return { ltd: location.lat, lng: location.lng };
     } else {
       throw new Error(`Unable to fetch coordinates. API status: ${response.data.status}`);
     }
@@ -85,3 +86,19 @@ module.exports.getAutocompleteSuggestions = async (input) => {
     throw new Error('An error occurred while fetching autocomplete suggestions');
   }
 }
+module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
+  try {
+      const captains = await captainModel.find({
+          location: {
+              $geoWithin: {
+                  $centerSphere: [[lng, ltd], radius / 6378.1] // Correct order [longitude, latitude]
+              }
+          }
+      });
+
+      return captains;
+  } catch (error) {
+      console.error("Error fetching captains in radius:", error);
+      return [];
+  }
+};

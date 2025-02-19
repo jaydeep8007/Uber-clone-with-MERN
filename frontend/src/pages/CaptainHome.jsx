@@ -1,60 +1,102 @@
-import React, { useRef, useState ,useEffect,useContext } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import CaptainDetails from "../components/CaptainDetails";
-import RidePopUp from "../components/RidePopUp";
-
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import axios from "axios";
+
+import CaptainDetails from "../components/CaptainDetails";
+import RidePopUp from "../components/RidePopUp";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
 import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
 
-
 const CaptainHome = () => {
-const [ridePopUpPanel, setRidePopUpPanel] = useState(true )
-const ridePopUpPanelRef = useRef(null)
+  const [ridePopUpPanel, setRidePopUpPanel] = useState(false);
+  const ridePopUpPanelRef = useRef(null);
 
-const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = useState(false)
-const confirmRidePopUpPanelRef = useRef(null)
+  const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = useState(false);
+  const confirmRidePopUpPanelRef = useRef(null);
 
-const {socket} = useContext(SocketContext)
-const {captain} = useContext(CaptainDataContext)
+  const [ride, setRide] = useState(null);
 
+  const { socket } = useContext(SocketContext);
+  const { captain } = useContext(CaptainDataContext);
 
-useEffect(() => {
-  console.log(captain)
- socket.emit("join",{
-  userId:captain._id,
-  
-  userType:"captain"
- })
-})
+  useEffect(() => {
+    socket.emit("join", {
+      userId: captain._id,
+      userType: "captain",
+    });
 
+    //port forwarding is provided by vscode itself so we use this here to make the captain join the room with thesame id as the captain
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          socket.emit("update-location-captain", {
+            userId: captain._id,
+            location: {
+              ltd: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          });
+        });
+      }
+    };
 
-useGSAP(()=>{
-  if(ridePopUpPanel){
-    gsap.to(ridePopUpPanelRef.current,{
-      transform:"translateY(0)"
-    })
-  }else{
-    gsap.to(ridePopUpPanelRef.current,{
-      transform:"translateY(100%)"
-    })
+    const locationInterval = setInterval(updateLocation, 10000);
+    updateLocation();
+
+    return () => clearInterval(locationInterval);
+  }, []);
+
+  socket.on("new-ride", (data) => {
+    console.log(data);
+    setRide(data);
+    setRidePopUpPanel(true);
+  });
+
+  async function confirmRide() {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/rides/confirm`,
+      {
+        rideId: ride._id,
+        captainId: captain._id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    setRidePopUpPanel(false);
+    setConfirmRidePopUpPanel(true);
+    console.log("ride created")
   }
-},[ridePopUpPanel])
 
-useGSAP(()=>{
-  if(confirmRidePopUpPanel){
-    gsap.to(confirmRidePopUpPanelRef.current,{
-      transform:"translateY(0)"
-    })
-  }else{
-    gsap.to(confirmRidePopUpPanelRef.current,{
-      transform:"translateY(100%)"
-    })
-  }
-},[confirmRidePopUpPanel])
+  useGSAP(() => {
+    if (ridePopUpPanel) {
+      gsap.to(ridePopUpPanelRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(ridePopUpPanelRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [ridePopUpPanel]);
 
+  useGSAP(() => {
+    if (confirmRidePopUpPanel) {
+      gsap.to(confirmRidePopUpPanelRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(confirmRidePopUpPanelRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [confirmRidePopUpPanel]);
 
   return (
     <div className="h-screen ">
@@ -91,13 +133,28 @@ useGSAP(()=>{
       {/* Content Section */}
       <div className="h-[40%] py-3 px-2">
         {/* User Info and Earnings */}
-      <CaptainDetails/>
+        <CaptainDetails />
       </div>
-      <div ref={ridePopUpPanelRef} className="overflow-hidden  fixed w-full  z-10 bottom-0 left-0 right-0 bg-white">
-       <RidePopUp setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
+      <div
+        ref={ridePopUpPanelRef}
+        className="overflow-hidden  fixed w-full  z-10 bottom-0 left-0 right-0 bg-white"
+      >
+        <RidePopUp
+          ride={ride}
+          setRidePopUpPanel={setRidePopUpPanel}
+          setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
+          confirmRide={confirmRide}
+        />
       </div>
-      <div ref={confirmRidePopUpPanelRef} className="overflow-hidden translate-y-full  fixed w-full h-screen  z-10 bottom-0 left-0 right-0 bg-white">
-       <ConfirmRidePopUp setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} setRidePopUpPanel={setRidePopUpPanel}/>
+      <div
+        ref={confirmRidePopUpPanelRef}
+        className="overflow-hidden translate-y-full  fixed w-full h-screen  z-10 bottom-0 left-0 right-0 bg-white"
+      >
+        <ConfirmRidePopUp
+          ride={ride}
+          setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
+          setRidePopUpPanel={setRidePopUpPanel}
+        />
       </div>
     </div>
   );
