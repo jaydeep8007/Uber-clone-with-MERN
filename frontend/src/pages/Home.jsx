@@ -1,4 +1,4 @@
-import React, { useRef, useState ,useContext , useEffect} from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import gsap from "gsap";
 import axios from "axios";
 import { useGSAP } from "@gsap/react";
@@ -11,6 +11,7 @@ import { SocketContext } from "../context/SocketContext";
 import { UserDatacontext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 import LiveTracking from "../components/LiveTracking";
+import LogoutButton from "../components/LogoutButton";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -31,33 +32,30 @@ const Home = () => {
   const [vehicleType, setVehicleType] = useState(null);
   const [fare, setFare] = useState({});
   const [ride, setRide] = useState(null);
+  const [vehicleImage, setVehicleImage] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-      const { socket } = useContext(SocketContext)
-      const { user } = useContext(UserDatacontext)
-      
-  
-      useEffect(() => {
-        console.log(user)
-          socket.emit("join", { userType: "user", userId: user._id })
-      }, [ user ])
-  
-      socket.on('ride-confirmed', ride => {
-  // console.log("ride confirmed socket on")
-          setVehicleFound(false)
-          setWaitingForDriver(true)
-          setRide(ride)
-      })
-  
-      socket.on('ride-started', ride => {
-          console.log("ride started sockett on navigate to riding")
-          setWaitingForDriver(false)
-          navigate('/riding', { state: { ride } }) // Updated navigate to include ride data
-      })
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDatacontext);
 
-    
-  
+  useEffect(() => {
+    console.log(user);
+    socket.emit("join", { userType: "user", userId: user._id });
+  }, [user]);
+
+  socket.on("ride-confirmed", (ride) => {
+    // console.log("ride confirmed socket on")
+    setVehicleFound(false);
+    setWaitingForDriver(true);
+    setRide(ride);
+  });
+
+  socket.on("ride-started", (ride) => {
+    console.log("ride started sockett on navigate to riding");
+    setWaitingForDriver(false);
+    navigate("/riding", { state: { ride } }); // Updated navigate to include ride data
+  });
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -199,17 +197,19 @@ const Home = () => {
   return (
     <div className="relative h-screen overflow-hidden">
       {/* Logo */}
-      <div>
-        <img
-          className="w-16 absolute top-5 left-5 mb-5"
-          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-          alt="Uber logo"
-        />
+
+      <img
+        className="w-16 absolute top-7 left-5 mb-5"
+        src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+        alt="Uber logo"
+      />
+      <div className={`${panelOpen ? "hidden" : "z-20"} absolute `}>
+        <LogoutButton />
       </div>
 
       {/* Background Live Map */}
-      <div  className="w-full h-screen  object-cover">
-        <LiveTracking/>
+      <div className="w-full  h-screen mt-[20%]  object-cover">
+        <LiveTracking />
         {/* <img
           className="w-full h-screen  object-cover"
           src="/uber-map.png"
@@ -217,88 +217,106 @@ const Home = () => {
         /> */}
       </div>
 
-{/* Form Section */}
-<div className="h-screen flex flex-col justify-end absolute w-full top-0">
-  <div className="relative bg-white p-6 rounded-t-xl shadow-xl">
-    {/* Close Button */}
-    {panelOpen && (
-      <button
-        onClick={() => setPanelOpen(false)}
-        className="absolute right-6 top-6 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+      {/* Form Section */}
+      <div
+        className={`${
+          panelOpen ? "h-full " : ""
+        } bottom-0 flex flex-col justify-end absolute w-full`}
       >
-        <img src="/arrow-down-s-line.png" alt="Close Panel" className="w-6 h-6" />
-      </button>
-    )}
+        <div className="relative bg-white p-6 rounded-t-xl shadow-xl">
+          {/* Close Button */}
+          {panelOpen && (
+            <button
+              onClick={() => setPanelOpen(false)}
+              className="absolute right-6 top-6 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+            >
+              <img
+                src="/arrow-down-s-line.png"
+                alt="Close Panel"
+                className="w-6 h-6"
+              />
+            </button>
+          )}
 
-    {/* Heading */}
-    <h4 className="text-2xl font-semibold text-gray-800 mb-4">Find a Trip</h4>
+          <h4 className="text-2xl font-semibold text-gray-800 mb-4">
+            Find a Trip
+          </h4>
 
-    {/* Form */}
-    <form onSubmit={submitHandler} className="relative space-y-4">
-      {/* Vertical Line */}
-      <div className="absolute left-7 top-[30%] h-14 w-1 bg-gray-800 rounded-full"></div>
+          {/* Form */}
+          <form onSubmit={submitHandler} className="relative space-y-4">
+            {/* Vertical Line */}
+            <div className="absolute left-7 top-[30%] h-14 w-1 bg-gray-800 rounded-full"></div>
 
-      {/* Pickup Input */}
-      <input
-        onClick={() => {
-          setPanelOpen(true);
-          setActiveField("pickup");
-        }}
-        value={pickup}
-        onChange={handlePickupChange}
-        className="bg-gray-100 px-12 py-3 text-lg rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        type="text"
-        placeholder="Add a pick-up location"
-      />
+            {/* Pickup Input */}
+            <input
+              onClick={() => {
+                setPanelOpen(true);
+                setActiveField("pickup");
+              }}
+              value={pickup}
+              onChange={handlePickupChange}
+              className="bg-gray-100 px-12 py-3 text-lg rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              placeholder="Add a pick-up location"
+            />
 
-      {/* Destination Input */}
-      <input
-        onClick={() => {
-          setPanelOpen(true);
-          setActiveField("destination");
-        }}
-        value={destination}
-        onChange={handleDestinationChange}
-        className="bg-gray-100 px-12 py-3 text-lg rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        type="text"
-        placeholder="Enter your destination"
-      />
+            {/* Destination Input */}
+            <input
+              onClick={() => {
+                setPanelOpen(true);
+                setActiveField("destination");
+              }}
+              value={destination}
+              onChange={handleDestinationChange}
+              className="bg-gray-100 px-12 py-3 text-lg rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              placeholder="Enter your destination"
+            />
 
-      {/* Find Trip Button */}
-      <button
-        onClick={findTrip}
-        className="bg-black text-white px-5 py-3 rounded-lg w-full font-medium text-lg transition-all duration-200 ease-in-out hover:bg-gray-900 active:scale-95"
-      >
-        Find Trip
-      </button>
-    </form>
-  </div>
-
-  {/* Location Search Panel - Visible when panelOpen is true */}
-  <div
-    ref={panelRef}
-    className={`bg-white w-full overflow-hidden  ${
-      panelOpen ? "h-full p-4 shadow-lg" : "h-0 p-0"
+            {/* Find Trip Button */}
+            <button
+              onClick={findTrip}
+              disabled={!pickup || !destination} // Disable if either input is empty
+              className={`px-5 py-3 rounded-lg w-full font-medium text-lg transition-all duration-200 ease-in-out 
+    ${
+      !pickup || !destination
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-black text-white hover:bg-gray-900 active:scale-95"
     }`}
-  >
-    <LocationSearchPanel
-      suggestions={
-        activeField === "pickup" ? pickupSuggestions : destinationSuggestions
-      }
-      setPanelOpen={setPanelOpen}
-      setVehiclePanelOpen={setVehiclePanelOpen}
-      setPickup={setPickup}
-      setDestination={setDestination}
-      activeField={activeField}
-    />
-  </div>
-</div>
+            >
+              Find Trip
+            </button>
+          </form>
+        </div>
+
+        {/* Location Search Panel - Visible when panelOpen is true */}
+        <div
+          ref={panelRef}
+          className={`bg-white w-full overflow-hidden  ${
+            panelOpen ? "h-full p-4 shadow-lg" : "h-0 p-0"
+          }`}
+        >
+          <LocationSearchPanel
+            suggestions={
+              activeField === "pickup"
+                ? pickupSuggestions
+                : destinationSuggestions
+            }
+            setPanelOpen={setPanelOpen}
+            setVehiclePanelOpen={setVehiclePanelOpen}
+            setPickup={setPickup}
+            setDestination={setDestination}
+            activeField={activeField}
+          />
+        </div>
+      </div>
 
       <div
         ref={vehiclePanelRef}
         className="overflow-hidden translate-y-full fixed w-full   bottom-0 left-0 right-0 bg-white"
       >
         <VehiclePanel
+          setVehiclImage={setVehicleImage}
           setVehicleType={setVehicleType}
           fare={fare}
           setConfirmRidePanel={setConfirmRidePanel}
@@ -311,6 +329,7 @@ const Home = () => {
         className={`overflow-hidden translate-y-full fixed w-full z-10 -bottom-10 pb-10 left-0 right-0 bg-white`}
       >
         <ConfirmRide
+          vehiclImage={vehicleImage}
           pickup={pickup}
           destination={destination}
           fare={fare}
@@ -325,6 +344,7 @@ const Home = () => {
         className={`  overflow-hidden translate-y-full fixed w-full z-10 -bottom-10 pb-10 left-0 right-0 bg-white`}
       >
         <LookingForDriver
+          vehiclImage={vehicleImage}
           pickup={pickup}
           destination={destination}
           fare={fare}
@@ -338,7 +358,8 @@ const Home = () => {
         className="overflow-hidden  fixed w-full  z-10 bottom-0 left-0 right-0 bg-white"
       >
         <WaitingForDriver
-        ride={ride}
+          vehiclImage={vehicleImage}
+          ride={ride}
           waitingForDriver={waitingForDriver}
           setWaitingForDriver={setWaitingForDriver}
           vehicleFound={vehicleFound}

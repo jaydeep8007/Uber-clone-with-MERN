@@ -17,7 +17,7 @@ const WaitingForDriver = (props) => {
         <div className="flex items-center justify-between p-4">
           <img
             className="h-12"
-            src="https://swyft.pl/wp-content/uploads/2023/05/how-many-people-can-a-uberx-take.jpg"
+            src={`${props.vehiclImage}`}
             alt=""
           />
           <div className="text-right">
@@ -55,7 +55,7 @@ const WaitingForDriver = (props) => {
               <img className="h-fit" src="currency-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">₹ {props.ride?.fare}</h3>
+                <h3 className="text-lg font-medium">₹{props.ride?.fare}</h3>
                 <p className="text-sm  text-gray-600">cash cash</p>
               </div>
             </div>

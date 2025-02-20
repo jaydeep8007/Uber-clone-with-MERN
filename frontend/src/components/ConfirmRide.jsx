@@ -21,7 +21,7 @@ const ConfirmRide = (props) => {
         </div>
         <div className="gap-2 flex flex-col justify-center items-center">
           <img
-            src="https://swyft.pl/wp-content/uploads/2023/05/how-many-people-can-a-uberx-take.jpg"
+            src={`${props.vehiclImage}`}
             alt="UberX Capacity"
             className=" h-24"
           />

@@ -9,6 +9,7 @@ import RidePopUp from "../components/RidePopUp";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
 import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
+import LogoutButton from "../components/LogoutButton";
 
 const CaptainHome = () => {
   const [ridePopUpPanel, setRidePopUpPanel] = useState(false);
@@ -110,7 +111,8 @@ const CaptainHome = () => {
       </div>
 
       {/* Logout Button */}
-      <Link
+      <LogoutButton/>
+      {/* <Link
         to="/captain-login"
         className="fixed right-5 top-5 h-10 w-10 bg-white flex items-center justify-center rounded-full shadow"
       >
@@ -119,7 +121,7 @@ const CaptainHome = () => {
           src="logout-box-r-line.png"
           alt="Logout Icon"
         />
-      </Link>
+      </Link> */}
 
       {/* Map Section */}
       <div className="h-[60%]">

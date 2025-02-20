@@ -57,7 +57,7 @@ const RidePopUp = (props) => {
               <img className="h-fit" src="currency-fill.png" alt="" />
 
               <div className="">
-                <h3 className="text-lg font-medium">$ {props.ride?.fare}</h3>
+                <h3 className="text-lg font-medium">₹{props.ride?.fare}</h3>
                 <p className="text-sm  text-gray-600">cash cash</p>
               </div>
             </div>

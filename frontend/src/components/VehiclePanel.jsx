@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 const VehiclePanel = (props) => {
+
   return (
     <div >
    <div className="relative">
@@ -22,8 +23,8 @@ const VehiclePanel = (props) => {
 
       <div  onClick={()=>{
       props.setConfirmRidePanel(true)
-    
       props.setVehicleType('car')
+      props.setVehiclImage("https://i.pinimg.com/474x/8d/21/7b/8d217b1000b642005fea7b6fd6c3d967.jpg")
     }} className=" scale-90 w-full flex justify-between items-center border-2  active:border-black rounded-xl p-3  ">
         <div>
           <img
@@ -36,7 +37,7 @@ const VehiclePanel = (props) => {
           <div className="font-medium flex items-center  gap-2">
             <span>UberGO</span>
             <img className="h-4" src="/user-3-fill.png" alt="" />
-            <span>2</span>
+            <span>3</span>
           </div>
           <p>
             <span className="pr-2 text-sm"> 2</span>minutes away
@@ -48,6 +49,7 @@ const VehiclePanel = (props) => {
       <div  onClick={()=>{
       props.setConfirmRidePanel(true)
       props.setVehicleType('motorcycle')
+      props.setVehiclImage("https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1649231091/assets/2c/7fa194-c954-49b2-9c6d-a3b8601370f5/original/Uber_Moto_Orange_312x208_pixels_Mobile.png")
     }} className=" scale-90 w-full flex justify-between items-center border-2 active:border-black  rounded-xl p-3  ">
         <div>
           <img
@@ -72,6 +74,7 @@ const VehiclePanel = (props) => {
       <div  onClick={()=>{
       props.setConfirmRidePanel(true)
       props.setVehicleType('auto')
+      props.setVehiclImage("https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1648431773/assets/1d/db8c56-0204-4ce4-81ce-56a11a07fe98/original/Uber_Auto_558x372_pixels_Desktop.png")
     }} className=" scale-90 w-full flex justify-between items-center border-2 active:border-black  rounded-xl p-3  ">
         <div>
           <img
